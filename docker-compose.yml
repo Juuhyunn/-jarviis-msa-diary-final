@@ -1,0 +1,23 @@
+version: '3'
+services:
+
+    nginx:
+        build: nginx
+        image: jarviis/nginx
+        container_name: juu_nginx
+        ports:
+          - "80:80"
+        volumes:
+          - .:/app
+        depends_on:
+          - django
+
+    django:
+        build: .
+        image: jarviis/django
+        container_name: juu_django
+        volumes:
+          - .:/app
+        ports:
+          - "8000:8000"
+        command: bash -c "python manage.py runserver 0.0.0.0:8000 && gunicorn api.wsgi:application --bind 0.0.0.0:8000"
